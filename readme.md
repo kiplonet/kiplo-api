@@ -7,7 +7,7 @@ Authenticates user and returns user API keys
 
 #### Request
 ```shell
-curl -X POST -u email:password http://kiplo.net/api/auth
+curl -X POST -u username:password http://kiplo.net/api/auth
 ```
 
 #### Response
@@ -38,11 +38,9 @@ Returns the current user.
 ```json
 {
   "id": "1",
-  "email": "barraca@anaba.com",
-  "firstname": "Barraca",
-  "lastname": "Abana",
-  "created_at": "2013-07-12 08:22:37",
-  "updated_at": "2013-07-12 08:22:37"
+  "name": "Barraca Abana",
+  "location": "Coimbra, PT",
+  "avatar": "http://static.kiplo.net/img/avatars/ce35967b619b.jpg
 }
 ```
 
@@ -55,12 +53,10 @@ Returns array of users associated with your sites and the sites you belong to.
 ```json
 [
  {
-   "id": "1",
-   "email": "barraca@anaba.com",
-   "firstname": "Barraca",
-   "lastname": "Abana",
-   "created_at": "2013-07-12 08:22:37",
-   "updated_at": "2013-07-12 08:22:37"
+  "id": "1",
+  "name": "Barraca Abana",
+  "location": "Coimbra, PT",
+  "avatar": "http://static.kiplo.net/img/avatars/ce35967b619b.jpg
  }
 ]
 ```
