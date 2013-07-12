@@ -40,7 +40,7 @@ Returns the current user.
   "id": "1",
   "name": "Barraca Abana",
   "location": "Coimbra, PT",
-  "avatar": "http://static.kiplo.net/img/avatars/ce35967b619b.jpg
+  "avatar": "http://static.kiplo.net/img/avatars/ce35967b619b.jpg"
 }
 ```
 
@@ -56,7 +56,7 @@ Returns array of users associated with your sites and the sites you belong to.
   "id": "1",
   "name": "Barraca Abana",
   "location": "Coimbra, PT",
-  "avatar": "http://static.kiplo.net/img/avatars/ce35967b619b.jpg
+  "avatar": "http://static.kiplo.net/img/avatars/ce35967b619b.jpg"
  }
 ]
 ```
