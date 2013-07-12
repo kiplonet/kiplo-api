@@ -1,0 +1,936 @@
+
+# Kiplo - API Documentation
+## API Authentication
+Kiplo uses Basic Auth of the user's API key and secret to authenticate each request. To retrieve a user's API key and secret, use the `POST /auth` endpoint, passing the user's email and password authenticated with Basic Auth.
+## API Endpoints
+### POST /auth
+Authenticates user and returns user API keys
+
+#### Request
+```shell
+curl -X POST -u email:password http://kiplo.net/api/auth
+```
+
+#### Response
+```json
+{
+  "api_key": "e4f5b6acae2c39079c07e35d90d87b1c",
+  "api_secret": "106afa1abf96767774bbcc4dd766d419"
+}
+```
+
+-
+### GET /ping
+Pings the server.
+
+#### Response
+```json
+{
+  "ping": "pong"
+}
+```
+
+-
+### GET /users/me
+
+Returns the current user.
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba000001",
+  "email": "barry@whitehouse.gov",
+  "firstname": "Barack",
+  "lastname": "Obama",
+  "created_at": "2013-06-21T13:20:51-04:00",
+  "updated_at": "2013-06-21T13:20:51-04:00"
+}
+```
+
+-
+### GET /users
+
+Returns array of users associated with your sites and the sites you belong to.
+
+#### Response
+```json
+[
+ {
+   "id": "51c48b73ef75acb6ba000002",
+   "email": "barry@whitehouse.gov",
+   "firstname": "Barack",
+   "lastname": "Obama",
+   "created_at": "2013-06-21T13:20:51-04:00",
+   "updated_at": "2013-06-21T13:20:51-04:00"
+ }
+]
+```
+
+-
+### GET /sites
+
+Returns an array of sites that the authenticated user belongs to.
+
+#### Params
+* **domain** *(optional)* — Site domain
+* **include** *(optional)* — Array of entities to include (`user`, `pages`)
+
+
+#### Response
+```json
+[
+ {
+   "id": "51c48b73ef75acb6ba000004",
+   "title": "My Site",
+   "domain": "mysite.com",
+   "cname": "abcdefghijklmnopqrst-abcdefghijklmnopqrstuvwxyz123456.a1.abc.rackcdn.com",
+   "timezone": "Eastern Time (US & Canada)",
+   "created_at": "2013-06-21T13:20:51-04:00",
+   "updated_at": "2013-06-21T13:20:51-04:00",
+   "user_id": "51af47a8ef75ac5e8c000001"
+ }
+]
+```
+
+-
+### POST /sites
+
+Creates a site belonging to the authenticated user.
+
+#### Params
+* **title**  — Site title
+* **domain**  — Site domain
+* **timezone** *(optional)* — Site timezone
+
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba000003",
+  "title": "My Site",
+  "domain": "mysite.com",
+  "cname": "abcdefghijklmnopqrst-abcdefghijklmnopqrstuvwxyz123456.a1.abc.rackcdn.com",
+  "timezone": "Eastern Time (US & Canada)",
+  "created_at": "2013-06-21T13:20:51-04:00",
+  "updated_at": "2013-06-21T13:20:51-04:00",
+  "user_id": "51af47a8ef75ac5e8c000001"
+}
+```
+
+-
+### GET /sites/:id
+
+Returns the given site.
+
+#### Params
+* **include** *(optional)* — Array of entities to include (`user`, `pages`)
+
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba000003",
+  "title": "My Site",
+  "domain": "mysite.com",
+  "cname": "abcdefghijklmnopqrst-abcdefghijklmnopqrstuvwxyz123456.a1.abc.rackcdn.com",
+  "timezone": "Eastern Time (US & Canada)",
+  "created_at": "2013-06-21T13:20:51-04:00",
+  "updated_at": "2013-06-21T13:20:51-04:00",
+  "user_id": "51af47a8ef75ac5e8c000001"
+}
+```
+
+-
+### PUT /sites/:id
+
+Updates the given site.
+
+#### Params
+* **title** *(optional)* — Site title
+* **domain** *(optional)* — Site domain
+* **timezone** *(optional)* — Site timezone
+* **hosting** *(optional)* — Site hosting (`siteleaf`, `ftp`, `s3`, `cloudfiles`)
+* **ftp_settings** *(optional)* — Site FTP settings (see hosting settings)
+* **s3_settings** *(optional)* — Site S3 settings (see hosting settings)
+* **cloudfiles_settings** *(optional)* — Site Cloudfiles settings (see hosting settings)
+
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba000003",
+  "title": "My Site",
+  "domain": "mysite.com",
+  "cname": "abcdefghijklmnopqrst-abcdefghijklmnopqrstuvwxyz123456.a1.abc.rackcdn.com",
+  "timezone": "Eastern Time (US & Canada)",
+  "created_at": "2013-06-21T13:20:51-04:00",
+  "updated_at": "2013-06-21T13:20:51-04:00",
+  "user_id": "51af47a8ef75ac5e8c000001"
+}
+```
+
+-
+### DELETE /sites/:id
+
+Deletes the given site.
+
+-
+### GET /sites/:id/pages
+
+Returns an array of all pages for the given site.
+
+#### Params
+* **include** *(optional)* — Array of entities to include (`user`, `site`, `parent`, `pages`, `posts`, `assets`, `meta`)
+
+
+#### Response
+```json
+[
+ {
+   "id": "51c48b73ef75acb6ba000006",
+   "title": "My Content",
+   "slug": "my-content",
+   "url": "/pages/my-content",
+   "body": "This is *my* content",
+   "visibility": "draft",
+   "created_at": "2013-06-21T13:20:51-04:00",
+   "updated_at": "2013-06-21T13:20:51-04:00",
+   "published_at": "2013-06-21T13:20:51-04:00",
+   "user_id": "51af47a8ef75ac5e8c000001",
+   "site_id": "51af47c1ef75acd940000002",
+   "parent_id": "51a39a57ef75ac7634000005",
+   "meta": [
+ 
+   ]
+ }
+]
+```
+
+-
+### POST /sites/:id/pages
+
+Creates a page on the given site.
+
+#### Params
+* **title**  — Page title
+* **body** *(optional)* — Page body
+* **custom_slug** *(optional)* — Page custom slug
+* **published_at** *(optional)* — Page published date
+* **visibility** *(optional)* — Page visibility (`draft`, `hidden`, `visible`)
+* **parent_id** *(optional)* — Page parent ID
+* **meta** *(optional)* — Array of Page metadata
+* **asset_ids** *(optional)* — Array of existing Asset IDs
+
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba000005",
+  "title": "My Content",
+  "slug": "my-content",
+  "url": "/pages/my-content",
+  "body": "This is *my* content",
+  "visibility": "draft",
+  "created_at": "2013-06-21T13:20:51-04:00",
+  "updated_at": "2013-06-21T13:20:51-04:00",
+  "published_at": "2013-06-21T13:20:51-04:00",
+  "user_id": "51af47a8ef75ac5e8c000001",
+  "site_id": "51af47c1ef75acd940000002",
+  "parent_id": "51a39a57ef75ac7634000005",
+  "meta": [
+
+  ]
+}
+```
+
+-
+### PUT /sites/:id/pages
+
+Repositions pages on the given site.
+
+#### Params
+* **ids**  — Nested JSON array of Page IDs and their children
+
+
+#### Request
+
+```shell
+curl -u API_KEY:API_SECRET \
+  -X PUT \
+  -d 'ids=[{"id":"51a38..."},{"id":"51a15...","children":[{"id":"51a39..."},{"id":"51a40..."}]}]' \
+  http://kiplo.net/api/sites/51a158a8ef75ac1ada000001/pages
+```
+
+#### Response
+```json
+[
+ {
+   "id": "51c48b73ef75acb6ba000006",
+   "title": "My Content",
+   "slug": "my-content",
+   "url": "/pages/my-content",
+   "body": "This is *my* content",
+   "visibility": "draft",
+   "created_at": "2013-06-21T13:20:51-04:00",
+   "updated_at": "2013-06-21T13:20:51-04:00",
+   "published_at": "2013-06-21T13:20:51-04:00",
+   "user_id": "51af47a8ef75ac5e8c000001",
+   "site_id": "51af47c1ef75acd940000002",
+   "parent_id": "51a39a57ef75ac7634000005",
+   "meta": [
+ 
+   ]
+ }
+]
+```
+
+-
+### GET /sites/:id/posts
+
+Returns an array of all posts for the given site.
+
+#### Params
+* **include** *(optional)* — Array of entities to include (`user`, `site`, `parent`, `assets`, `meta`, `taxonomy`)
+
+
+#### Response
+```json
+[
+ {
+   "id": "51c48b73ef75acb6ba000008",
+   "title": "My Content",
+   "slug": "my-content",
+   "url": "/pages/my-content",
+   "body": "This is *my* content",
+   "visibility": "draft",
+   "created_at": "2013-06-21T13:20:51-04:00",
+   "updated_at": "2013-06-21T13:20:51-04:00",
+   "published_at": "2013-06-21T13:20:51-04:00",
+   "user_id": "51af47a8ef75ac5e8c000001",
+   "site_id": "51af47c1ef75acd940000002",
+   "parent_id": "51a39a57ef75ac7634000005",
+   "meta": [
+ 
+   ]
+ }
+]
+```
+
+-
+### GET /sites/:id/assets
+
+Returns an array of all assets for the given site.
+
+#### Response
+```json
+[
+ {
+   "id": "51c48b73ef75acb6ba00000a",
+   "filename": "my-file.gif",
+   "url": "/assets/my-file.gif",
+   "file": {
+     "url": null
+   },
+   "content_type": "image/gif",
+   "filesize": 23856,
+   "checksum": "9187a6775bdce8f1f2143accea89ba6c",
+   "created_at": "2013-06-21T13:20:51-04:00",
+   "updated_at": "2013-06-21T13:20:51-04:00"
+ }
+]
+```
+
+-
+### POST /sites/:id/assets
+
+Creates an asset on the given site.
+
+#### Params
+* **file**  — Asset file
+
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba000009",
+  "filename": "my-file.gif",
+  "url": "/assets/my-file.gif",
+  "file": {
+    "url": null
+  },
+  "content_type": "image/gif",
+  "filesize": 23856,
+  "checksum": "9187a6775bdce8f1f2143accea89ba6c",
+  "created_at": "2013-06-21T13:20:51-04:00",
+  "updated_at": "2013-06-21T13:20:51-04:00"
+}
+```
+
+-
+### GET /sites/:id/users
+
+Returns an array of users for the given site.
+
+#### Response
+```json
+[
+ {
+   "id": "51c48b73ef75acb6ba000002",
+   "email": "barry@whitehouse.gov",
+   "firstname": "Barack",
+   "lastname": "Obama",
+   "created_at": "2013-06-21T13:20:51-04:00",
+   "updated_at": "2013-06-21T13:20:51-04:00"
+ }
+]
+```
+
+-
+### GET /pages
+
+Returns an array of Pages created by the authenticated user.
+
+#### Params
+* **include** *(optional)* — Array of entities to include (`user`, `site`, `parent`, `pages`, `posts`, `assets`, `meta`)
+
+
+#### Response
+```json
+[
+ {
+   "id": "51c48b73ef75acb6ba000006",
+   "title": "My Content",
+   "slug": "my-content",
+   "url": "/pages/my-content",
+   "body": "This is *my* content",
+   "visibility": "draft",
+   "created_at": "2013-06-21T13:20:51-04:00",
+   "updated_at": "2013-06-21T13:20:51-04:00",
+   "published_at": "2013-06-21T13:20:51-04:00",
+   "user_id": "51af47a8ef75ac5e8c000001",
+   "site_id": "51af47c1ef75acd940000002",
+   "parent_id": "51a39a57ef75ac7634000005",
+   "meta": [
+ 
+   ]
+ }
+]
+```
+
+-
+### GET /pages/:id
+
+Returns the given page.
+
+#### Params
+* **include** *(optional)* — Array of entities to include (`user`, `site`, `parent`, `pages`, `posts`, `assets`, `meta`)
+
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba000005",
+  "title": "My Content",
+  "slug": "my-content",
+  "url": "/pages/my-content",
+  "body": "This is *my* content",
+  "visibility": "draft",
+  "created_at": "2013-06-21T13:20:51-04:00",
+  "updated_at": "2013-06-21T13:20:51-04:00",
+  "published_at": "2013-06-21T13:20:51-04:00",
+  "user_id": "51af47a8ef75ac5e8c000001",
+  "site_id": "51af47c1ef75acd940000002",
+  "parent_id": "51a39a57ef75ac7634000005",
+  "meta": [
+
+  ]
+}
+```
+
+-
+### PUT /pages/:id
+
+Updates the given page.
+
+#### Params
+* **title** *(optional)* — Page title
+* **body** *(optional)* — Page body
+* **custom_slug** *(optional)* — Page slug
+* **published_at** *(optional)* — Page published date
+* **visibility** *(optional)* — Page visibility (`draft`, `hidden`, `visible`)
+* **parent_id** *(optional)* — Page parent ID
+* **meta** *(optional)* — Array of Page Metadata (see Metadata)
+
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba000005",
+  "title": "My Content",
+  "slug": "my-content",
+  "url": "/pages/my-content",
+  "body": "This is *my* content",
+  "visibility": "draft",
+  "created_at": "2013-06-21T13:20:51-04:00",
+  "updated_at": "2013-06-21T13:20:51-04:00",
+  "published_at": "2013-06-21T13:20:51-04:00",
+  "user_id": "51af47a8ef75ac5e8c000001",
+  "site_id": "51af47c1ef75acd940000002",
+  "parent_id": "51a39a57ef75ac7634000005",
+  "meta": [
+
+  ]
+}
+```
+
+-
+### DELETE /pages/:id
+
+Deletes the given page.
+
+-
+### GET /pages/:id/posts
+
+Returns an array of posts on the given page.
+
+#### Params
+* **include** *(optional)* — Array of entities to include (`user`, `site`, `parent`, `assets`, `meta`, `taxonomy`)
+
+
+#### Response
+```json
+[
+ {
+   "id": "51c48b73ef75acb6ba000008",
+   "title": "My Content",
+   "slug": "my-content",
+   "url": "/pages/my-content",
+   "body": "This is *my* content",
+   "visibility": "draft",
+   "created_at": "2013-06-21T13:20:51-04:00",
+   "updated_at": "2013-06-21T13:20:51-04:00",
+   "published_at": "2013-06-21T13:20:51-04:00",
+   "user_id": "51af47a8ef75ac5e8c000001",
+   "site_id": "51af47c1ef75acd940000002",
+   "parent_id": "51a39a57ef75ac7634000005",
+   "meta": [
+ 
+   ]
+ }
+]
+```
+
+-
+### POST /pages/:id/posts
+
+Creates a post on the given page.
+
+#### Params
+* **title**  — Post title
+* **body** *(optional)* — Post body
+* **custom_slug** *(optional)* — Post custom slug
+* **published_at** *(optional)* — Post published date
+* **visibility** *(optional)* — Post visibility
+* **meta** *(optional)* — Array of Taxonomy
+* **taxonomy** *(optional)* — Array of Metadata
+* **asset_ids** *(optional)* — Array of Asset IDs
+
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba000007",
+  "title": "My Content",
+  "slug": "my-content",
+  "url": "/pages/my-content",
+  "body": "This is *my* content",
+  "visibility": "draft",
+  "created_at": "2013-06-21T13:20:51-04:00",
+  "updated_at": "2013-06-21T13:20:51-04:00",
+  "published_at": "2013-06-21T13:20:51-04:00",
+  "user_id": "51af47a8ef75ac5e8c000001",
+  "site_id": "51af47c1ef75acd940000002",
+  "parent_id": "51a39a57ef75ac7634000005",
+  "meta": [
+
+  ]
+}
+```
+
+-
+### GET /pages/:id/assets
+
+Returns an array of assets on the given page.
+
+#### Response
+```json
+[
+ {
+   "id": "51c48b73ef75acb6ba00000a",
+   "filename": "my-file.gif",
+   "url": "/assets/my-file.gif",
+   "file": {
+     "url": null
+   },
+   "content_type": "image/gif",
+   "filesize": 23856,
+   "checksum": "9187a6775bdce8f1f2143accea89ba6c",
+   "created_at": "2013-06-21T13:20:51-04:00",
+   "updated_at": "2013-06-21T13:20:51-04:00"
+ }
+]
+```
+
+-
+### POST /pages/:id/assets
+
+Creates an asset on the given page.
+
+#### Params
+* **file**  — Asset file
+
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba000009",
+  "filename": "my-file.gif",
+  "url": "/assets/my-file.gif",
+  "file": {
+    "url": null
+  },
+  "content_type": "image/gif",
+  "filesize": 23856,
+  "checksum": "9187a6775bdce8f1f2143accea89ba6c",
+  "created_at": "2013-06-21T13:20:51-04:00",
+  "updated_at": "2013-06-21T13:20:51-04:00"
+}
+```
+
+-
+### POST /pages/:id/meta
+
+Creates metadata on the given page.
+
+#### Params
+* **key**  — Metadata key
+* **value**  — Metadata value
+
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba00000b",
+  "key": "color",
+  "value": "blue"
+}
+```
+
+-
+### GET /posts
+
+Returns an array of posts created by the authenticated user.
+
+#### Params
+* **include** *(optional)* — Array of entities to include (`user`, `site`, `parent`, `assets`, `meta`, `taxonomy`)
+
+
+#### Response
+```json
+[
+ {
+   "id": "51c48b73ef75acb6ba000008",
+   "title": "My Content",
+   "slug": "my-content",
+   "url": "/pages/my-content",
+   "body": "This is *my* content",
+   "visibility": "draft",
+   "created_at": "2013-06-21T13:20:51-04:00",
+   "updated_at": "2013-06-21T13:20:51-04:00",
+   "published_at": "2013-06-21T13:20:51-04:00",
+   "user_id": "51af47a8ef75ac5e8c000001",
+   "site_id": "51af47c1ef75acd940000002",
+   "parent_id": "51a39a57ef75ac7634000005",
+   "meta": [
+ 
+   ]
+ }
+]
+```
+
+-
+### GET /posts/:id
+
+Returns the given post.
+
+#### Params
+* **include** *(optional)* — Array of entities to include (`user`, `site`, `parent`, `assets`, `meta`, `taxonomy`)
+
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba000007",
+  "title": "My Content",
+  "slug": "my-content",
+  "url": "/pages/my-content",
+  "body": "This is *my* content",
+  "visibility": "draft",
+  "created_at": "2013-06-21T13:20:51-04:00",
+  "updated_at": "2013-06-21T13:20:51-04:00",
+  "published_at": "2013-06-21T13:20:51-04:00",
+  "user_id": "51af47a8ef75ac5e8c000001",
+  "site_id": "51af47c1ef75acd940000002",
+  "parent_id": "51a39a57ef75ac7634000005",
+  "meta": [
+
+  ]
+}
+```
+
+-
+### PUT /posts/:id
+
+Updates the given post.
+
+#### Params
+* **title** *(optional)* — Post title
+* **body** *(optional)* — Post body
+* **custom_slug** *(optional)* — Post custom slug
+* **published_at** *(optional)* — Post published date
+* **visibility** *(optional)* — Post visibility (`draft`, `hidden`, `visible`)
+* **parent_id** *(optional)* — Post parent ID
+* **meta** *(optional)* — Array of Metadata
+* **taxonomy** *(optional)* — Array of Taxonomy
+
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba000007",
+  "title": "My Content",
+  "slug": "my-content",
+  "url": "/pages/my-content",
+  "body": "This is *my* content",
+  "visibility": "draft",
+  "created_at": "2013-06-21T13:20:51-04:00",
+  "updated_at": "2013-06-21T13:20:51-04:00",
+  "published_at": "2013-06-21T13:20:51-04:00",
+  "user_id": "51af47a8ef75ac5e8c000001",
+  "site_id": "51af47c1ef75acd940000002",
+  "parent_id": "51a39a57ef75ac7634000005",
+  "meta": [
+
+  ]
+}
+```
+
+-
+### DELETE /posts/:id
+
+Deletes the given post.
+
+-
+### POST /posts/:id/taxonomy
+
+Creates taxonomy on the given post.
+
+#### Params
+* **key**  — Taxonomy key
+* **values**  — Array of values
+
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba00000d",
+  "key": "Tags",
+  "slug": "tags",
+  "values": [
+    {
+      "value": "Announcement",
+      "slug": "announcement",
+      "url": "/blog/tags/announcement"
+    }
+  ]
+}
+```
+
+-
+### GET /posts/:id/assets
+
+Returns an array of assets on the given post.
+
+#### Response
+```json
+[
+ {
+   "id": "51c48b73ef75acb6ba00000a",
+   "filename": "my-file.gif",
+   "url": "/assets/my-file.gif",
+   "file": {
+     "url": null
+   },
+   "content_type": "image/gif",
+   "filesize": 23856,
+   "checksum": "9187a6775bdce8f1f2143accea89ba6c",
+   "created_at": "2013-06-21T13:20:51-04:00",
+   "updated_at": "2013-06-21T13:20:51-04:00"
+ }
+]
+```
+
+-
+### POST /posts/:id/assets
+
+Creates an asset on the given post.
+
+#### Params
+* **file**  — Asset file
+
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba000009",
+  "filename": "my-file.gif",
+  "url": "/assets/my-file.gif",
+  "file": {
+    "url": null
+  },
+  "content_type": "image/gif",
+  "filesize": 23856,
+  "checksum": "9187a6775bdce8f1f2143accea89ba6c",
+  "created_at": "2013-06-21T13:20:51-04:00",
+  "updated_at": "2013-06-21T13:20:51-04:00"
+}
+```
+
+-
+### GET /taxonomy/:id
+
+Returns the given taxonomy.
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba00000d",
+  "key": "Tags",
+  "slug": "tags",
+  "values": [
+    {
+      "value": "Announcement",
+      "slug": "announcement",
+      "url": "/blog/tags/announcement"
+    }
+  ]
+}
+```
+
+-
+### PUT /taxonomy/:id
+
+Updates the given taxonomy.
+
+#### Params
+* **key** *(optional)* — Taxonomy key
+* **values** *(optional)* — Array of values
+
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba00000d",
+  "key": "Tags",
+  "slug": "tags",
+  "values": [
+    {
+      "value": "Announcement",
+      "slug": "announcement",
+      "url": "/blog/tags/announcement"
+    }
+  ]
+}
+```
+
+-
+### DELETE /taxonomy/:id
+
+Deletes the given taxonomy.
+
+-
+### GET /assets/:id
+
+Returns the given asset.
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba000009",
+  "filename": "my-file.gif",
+  "url": "/assets/my-file.gif",
+  "file": {
+    "url": null
+  },
+  "content_type": "image/gif",
+  "filesize": 23856,
+  "checksum": "9187a6775bdce8f1f2143accea89ba6c",
+  "created_at": "2013-06-21T13:20:51-04:00",
+  "updated_at": "2013-06-21T13:20:51-04:00"
+}
+```
+
+-
+### PUT /assets/:id
+
+Updates the given asset.
+
+#### Params
+* **filename** *(optional)* — Asset filename
+
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba000009",
+  "filename": "my-file.gif",
+  "url": "/assets/my-file.gif",
+  "file": {
+    "url": null
+  },
+  "content_type": "image/gif",
+  "filesize": 23856,
+  "checksum": "9187a6775bdce8f1f2143accea89ba6c",
+  "created_at": "2013-06-21T13:20:51-04:00",
+  "updated_at": "2013-06-21T13:20:51-04:00"
+}
+```
+
+-
+### DELETE /assets/:id
+
+Deletes the given asset.
+
+-
+### PUT /assets/:id/restore
+
+Restores the given deleted asset.
+
+#### Response
+```json
+{
+  "id": "51c48b73ef75acb6ba000009",
+  "filename": "my-file.gif",
+  "url": "/assets/my-file.gif",
+  "file": {
+    "url": null
+  },
+  "content_type": "image/gif",
+  "filesize": 23856,
+  "checksum": "9187a6775bdce8f1f2143accea89ba6c",
+  "created_at": "2013-06-21T13:20:51-04:00",
+  "updated_at": "2013-06-21T13:20:51-04:00"
+}
+```
+
+-
